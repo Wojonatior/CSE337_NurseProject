@@ -16,13 +16,16 @@ ref.on('value', function(allRequestsSnapshot, prevChildKey){
 	allRequestsSnapshot.forEach(function(requestSnapshot){
 
 		//Unpacking data and storing in variables
+		var currentUser = ref.getAuth().uid;
 		var key = requestSnapshot.key();
 		var type = requestSnapshot.child('type').val();
 		var time = requestSnapshot.child('time').val();
 		var user = requestSnapshot.child('user').val();
 		var owner = requestSnapshot.child('owner').val();
-		var arg = "'assign(\"" + key + "\");'";
-		var button = "<button type='button' id='btnAssign" + key + "' class='assignButton' onclick=" + arg + ">Assign</button>";
+		var assignArg = "'assign(\"" + key + "\");'";
+		var assignButton = "<button type='button' id='btnAssign" + key + "' class='assignButton' onclick=" + assignArg + ">Assign</button>";
+		var resolveArg = "'resolve(\"" + key + "\");'";
+		var resolveButton = "<button type='button' id='btnResolve" + key + "' class='resolveButton' onclick=" + resolveArg + ">Resolve</button>";
 		//If the Div exists don't do anything
 		if ($('#'+key).length) {
 			
@@ -33,7 +36,12 @@ ref.on('value', function(allRequestsSnapshot, prevChildKey){
 			$("#"+key).append("<b>Time:</b> " + time + " ");
 			$("#"+key).append("<b>User:</b> " + user + " ");
 			$("#"+key).append("<div id=owner" + key + "><b>Nurse: </b>" + owner + "</div>");
-			$("#"+key).append(button);
+			if(owner == currentUser){
+				$("#"+key).append(resolveButton);
+			}else{
+				$("#"+key).append(assignButton);
+			}
+			
 			//for debugging
 			console.log('added a div with the following ID: '+ key);
 		}	
