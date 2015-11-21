@@ -11,8 +11,8 @@
 //establishing firebase reference
 var ref = new Firebase('https://sweltering-inferno-6629.firebaseio.com/requests');
 
-//ref.on('child_added', function(allRequestsSnapshot, prevChildKey)
-ref.once('value', function(allRequestsSnapshot) {
+ref.on('value', function(allRequestsSnapshot, prevChildKey){
+//ref.once('value', function(allRequestsSnapshot) {
 	allRequestsSnapshot.forEach(function(requestSnapshot){
 
 		//Unpacking data and storing in variables
@@ -22,25 +22,44 @@ ref.once('value', function(allRequestsSnapshot) {
 		var user = requestSnapshot.child('user').val();
 		var arg = "'assign(\"" + key + "\");'";
 		var button = "<button type='button' id='btnAssign" + key + "' class='assignButton' onclick=" + arg + ">Assign</button>";
-
-		//Creating Div With ID that matches firebase key and filling with data
-		$('body').prepend("<div class='request' id=" + key + "></div>");
-		$("#"+key).append("<b>Type:</b> " + type + " ");
-		$("#"+key).append("<b>Time:</b> " + time + " ");
-		$("#"+key).append("<b>User:</b> " + user + " ");
-		$("#"+key).append(button);
-
-
-		//for debugging
-		console.log('added a div with the following ID: '+ key);
-	});
-	
+		//If the Div exists don't do anything
+		if ($('#'+key).length) {
+			
+		}else{ // If it doesn't, make it 
+			//Creating Div With ID that matches firebase key and filling with data
+			$('body').prepend("<div class='request' id=" + key + "></div>");
+			$("#"+key).append("<b>Type:</b> " + type + " ");
+			$("#"+key).append("<b>Time:</b> " + time + " ");
+			$("#"+key).append("<b>User:</b> " + user + " ");
+			$("#"+key).append("<div id=owner" + key + "><b>Nurse:</b> Unassigned</div>");
+			$("#"+key).append(button);
+			//for debugging
+			console.log('added a div with the following ID: '+ key);
+		}	
+	});	
+});
+//Upon a removal from the database, removes the assosicated div from the page
+ref.on('child_removed', function(snapshot, prevChildKey){
+	var key = snapshot.key();
+	$('#' + key).remove();
 });
 </script>
 
 <script>
 	var assign = function(key){
+		//Wierd onClick function
+		var arg = "'resolve(\"" + key + "\");'";
+		//Replace previous unsassigned owner with current one
+		$('#owner'+key).replaceWith("<div id=owner" + key + "><b>Nurse:</b> " + ref.getAuth().uid + "</div>");
+		//Replace assign buttton with resolve button
+		$('#btnAssign'+key).replaceWith("<button type='button' id='btnResolve" + key + "' class='resolveButton' onclick=" + arg + ">Resolve</button>");
+		//debugging
 		console.log("Unimplemented: Assigned case with key:" + key);
+	};
+	//Handles removing request from database
+	var resolve = function(key){
+		childRef = ref.child(key);
+		childRef.remove();
 	};
 </script>
 
