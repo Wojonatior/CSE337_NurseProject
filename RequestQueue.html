@@ -3,17 +3,46 @@
 <head>
 </head>
 <body>
+<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
 
 
 <script>
+//establishing firebase reference
 var ref = new Firebase('https://sweltering-inferno-6629.firebaseio.com/requests');
-ref.on('child_added', function(snapshot, prevChildKey) {
-	$('body').append("'<div class='butt'></div>");
-	$('div[id=' + id of current child + ']').append( NEW CHILD INFO )
+
+//ref.on('child_added', function(allRequestsSnapshot, prevChildKey)
+ref.once('value', function(allRequestsSnapshot) {
+	allRequestsSnapshot.forEach(function(requestSnapshot){
+
+		//Unpacking data and storing in variables
+		var key = requestSnapshot.key();
+		var type = requestSnapshot.child('type').val();
+		var time = requestSnapshot.child('time').val();
+		var user = requestSnapshot.child('user').val();
+		var arg = "'assign(\"" + key + "\");'";
+		var button = "<button type='button' id='btnAssign" + key + "' class='assignButton' onclick=" + arg + ">Assign</button>";
+
+		//Creating Div With ID that matches firebase key and filling with data
+		$('body').prepend("<div class='request' id=" + key + "></div>");
+		$("#"+key).append("<b>Type:</b> " + type + " ");
+		$("#"+key).append("<b>Time:</b> " + time + " ");
+		$("#"+key).append("<b>User:</b> " + user + " ");
+		$("#"+key).append(button);
+
+
+		//for debugging
+		console.log('added a div with the following ID: '+ key);
+	});
+	
 });
 </script>
-  <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
-  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+
+<script>
+	var assign = function(key){
+		console.log("Unimplemented: Assigned case with key:" + key);
+	};
+</script>
 
 
 </body>
