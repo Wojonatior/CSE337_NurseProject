@@ -1,106 +1,66 @@
 <!DOCTYPE html>
 <html>
+	<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+	<head>
+		<title> Nursing Program </title>
+		<link rel="stylesheet" href="css/rpStyle.css">
+	</head>
 
-<script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
-
-<head>
-<title> Nursing Program </title>
-<link rel="stylesheet" href="css/rpStyle.css">
-</head>
-
-<body>
-
-
-<h1 class="headertext">Request Assistance</h1>
-<div class="undertext">If you wish to acquire assistance, click one of buttons below most relevant to your need and a nurse will be with you shortly.</div>
+	<body>
+		<h1 class="headertext">Request Assistance</h1>
+		<div class="undertext">If you wish to acquire assistance, click one of buttons below most relevant to your need and a nurse will be with you shortly.</div>
 
 
 
-<table cellpadding="20" align="center">
-<tr>
+		<div id="buttonset">
+			<ul class="row1">
+				<li id="emergencyli">
+					<button type="button" id="btnEmergency" onclick="sendRequest('Emergency');" class="button">Emergency</button>
+				</li>
+				<li>
+					<button type="button" id="btnPain" onclick="sendRequest('Pain');" class="button">Pain</button>
+				</li>
+				<li>
+					<button type="button" id="btnHelp" onclick="sendRequest('Help');" class="button">Help</button>
+				</li>
+			</ul>
+			
+			<ul class="row2">
+				<li>
+					<button type="button" id="btnThirsty" onclick="sendRequest('Thirsty');" class="button">Thirsty</button>
+				</li>
+				<li>
+					<button type="button" id="btnHungry" onclick="sendRequest('Hungry');" class="button">Hungry</button>
+				</li>
+				<li>
+					<button type="button" id="btnBathroom" onclick="sendRequest('Bathroom');" class="button">Bathroom</button>
+				</li>
+			</ul>
+			
+			<ul class="row3">
+				<li>
+					<button type="button" id="btnAccessories" onclick="sendRequest('Accessories');" class="button">Accessories</button>
+				</li>
+				<li>
+					<button type="button" id="btnOther" onclick="sendRequest('Other');" class="button">Other</button>
+				</li>
+				<li>
+					<button type="button" id="btnComfort" onclick="sendRequest('Comfort');" class="button">Comfort</button>
+				</li>
+			</ul>
+		</div>
 
-<td>
-<button type="button" id="btnHelp" onclick="sendRequest('Help');" class="button">Help</button>
-</td>
+		<script>
+			var postsRef = new Firebase('https://sweltering-inferno-6629.firebaseio.com/requests/');
+			var sendRequest = function(requestType){
+				postsRef.push({
+				type: requestType,
+				time: 'rightnow',
+				user: postsRef.getAuth().uid,
+				owner: 'unassigned'
+				});	
+			};
+		</script>
 
-<td>
-<button type="button" id="btnPain" onclick="sendRequest('Pain');" class="button">Pain</button>
-</td>
-
-<td>
-<button type="button" id="btnComfort" onclick="sendRequest('Comfort');" class="button">Comfort</button>
-</td>
-
-
-</tr>
-
-
-<tr>
-
-<td>
-
-<button type="button" id="btnThirsty" onclick="sendRequest('Thirsty');" class="button">Thirsty</button>
-
-</td>
-
-<td>
-<button type="button" id="btnHungry" onclick="sendRequest('Hungry');" class="button">Hungry</button>
-</td>
-
-<td>
-<button type="button" id="btnBathroom" onclick="sendRequest('Bathroom');" class="button">Bathroom</button>
-
-</td>
-
-
-</tr>
-
-
-<tr>
-
-<td>
-<button type="button" id="btnAccessories" onclick="sendRequest('Accessories');" class="button">Accessories</button>
-</td>
-
-
-
-<td>
-<button type="button" id="btnOther" onclick="sendRequest('Other');" class="button">Other</button>
-</td>
-
-
-<td>
-<button type="button" id="btnEmergency" onclick="sendRequest('Emergency');" class="button">Emergency</button>
-
-</td>
-</tr>
-</table>
-
-<script>
-var postsRef = new Firebase('https://sweltering-inferno-6629.firebaseio.com/requests/');
-var sendRequest = function(requestType){
-	postsRef.push({
-    type: requestType,
-    time: 'rightnow',
-    user: postsRef.getAuth().uid,
-    owner: 'unassigned'
-  });	
-};
-</script>
-
-</body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	</body>
 </html>
